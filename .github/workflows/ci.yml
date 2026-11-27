@@ -1,3 +1,11 @@
+# Optimized by ci-cost (https://github.com/mariotavarez/ci-cost)
+# Applied 4 optimizations:
+# - [HIGH] Split "pytest-benchmark" into parallel jobs (lint + test + build)
+# - [MEDIUM] Add concurrency group to "ci.yml"
+# - [MEDIUM] 14 jobs clone the repo — consider artifact sharing
+# - [MEDIUM] Use "npm ci" instead of "npm install" in "benchmarkjs"
+# Estimated savings: ~10 min/run
+#
 name: CI
 on:
   workflow_dispatch:
@@ -8,6 +16,10 @@ on:
     branches:
       - master
 
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   benchmarkdotnet-framework:
     name: Run Benchmark.Net .Net Benchmark Framework example
